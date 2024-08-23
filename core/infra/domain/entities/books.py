@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from core.infra.domain.entities.authors import Author
 from core.infra.domain.entities.base import BaseEntity
@@ -10,7 +10,7 @@ class BookEntity(BaseEntity):
     description: BookDescription
     name: BookName
     theme: BookTheme
-    authors: set["Author"]
+    authors: set["Author"] = field(default_factory=set)
 
     def add_author(self, author: Author):
         self.authors.add(author)

@@ -7,12 +7,12 @@ from core.infra.domain.values.base import BaseValue
 
 @dataclass
 class AuthorFirstNameValue:
-    value: str | None
+    value: str
 
 
 @dataclass
 class AuthorSecondNameValue:
-    value: str | None
+    value: str
 
 
 @dataclass

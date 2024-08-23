@@ -60,6 +60,6 @@ def test_book_theme_valid():
 
 def test_book_theme_invalid_type():
     with pytest.raises(UnexpectedTypeException) as occurred_exception:
-        theme = BookTheme(value="Invalid Theme")
+        theme = BookTheme(value="Invalid Theme")  # noqa
         theme.validate()
     assert occurred_exception.value.value == "Invalid Theme"

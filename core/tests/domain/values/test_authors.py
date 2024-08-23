@@ -19,6 +19,6 @@ def test_sex_value_invalid_type():
 
     invalid_value = InvalidType()
     with pytest.raises(UnexpectedTypeException) as excinfo:
-        sex_value = SexValue(value=invalid_value)
+        sex_value = SexValue(value=invalid_value)  # noqa
         sex_value.validate()
     assert excinfo.value.value == invalid_value

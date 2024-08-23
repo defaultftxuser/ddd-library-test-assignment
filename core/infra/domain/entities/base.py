@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import uuid4
@@ -17,10 +17,7 @@ class BaseEntity(ABC):
     def __hash__(self) -> int:
         return hash(self.oid)
 
-    def __eq__(self, other: object | "BaseEntity") -> bool:  # noqa
+    def __eq__(self, other: object) -> bool:  # noqa
         if not isinstance(other, BaseEntity):
             raise NotImplemented
         return self.oid == other.oid
-
-    def register_event(self, event: "BaseValue"):
-        ...
