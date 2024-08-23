@@ -9,19 +9,18 @@ from core.infra.domain.values.base import BaseValue
 
 @dataclass
 class BaseEntity(ABC):
-    oid: str = field(default_factory=lambda: str(uuid4()), kw_only=True)
-    id: int = field(default=None, kw_only=True)
+    oid: str = field(default_factory=lambda: str(uuid4()), kw_only=True)  # noqa
+    id: None | int = field(default=None, kw_only=True)  # noqa
     created_at: datetime = field(default_factory=datetime.now, kw_only=True)
-    updated_at: datetime = field(default=None, kw_only=True)
+    updated_at: datetime | None = field(default=None, kw_only=True)
 
     def __hash__(self) -> int:
         return hash(self.oid)
 
-    def __eq__(self, other: "BaseEntity") -> bool:
+    def __eq__(self, other: object | "BaseEntity") -> bool:  # noqa
+        if not isinstance(other, BaseEntity):
+            raise NotImplemented
         return self.oid == other.oid
 
     def register_event(self, event: "BaseValue"):
         ...
-
-
-

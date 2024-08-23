@@ -4,12 +4,23 @@ from core.exceptions.domain.base import BaseDomainException
 
 
 @dataclass(eq=False)
-class BookDescriptionException(BaseDomainException):
+class TooLongBookDescriptionException(BaseDomainException):
     length: int
 
     @property
     def message(self) -> str:
-        return f"Length of the book description longer than expected {self.length} > 100"
+        return (
+            f"Length of the book description longer than expected {self.length} > 100"
+        )
+
+
+@dataclass(eq=False)
+class TooShortBookDescriptionException(BaseDomainException):
+    length: int
+
+    @property
+    def message(self) -> str:
+        return f"Length of the book description longer than expected {self.length} < 5"
 
 
 @dataclass(eq=False)
