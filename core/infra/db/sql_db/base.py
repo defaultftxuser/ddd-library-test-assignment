@@ -11,7 +11,9 @@ class Base(DeclarativeBase):
 class SQLBaseModel(Base):
     __abstract__ = True
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, index=True, autoincrement=True
+    )
     created_at: MappedColumn[datetime] = Column(DateTime, server_default=func.now())
     updated_at: MappedColumn[datetime] = Column(
         DateTime, server_default=func.now(), onupdate=func.now()
