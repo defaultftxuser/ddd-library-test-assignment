@@ -2,17 +2,14 @@ from contextlib import asynccontextmanager
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import (
-    AsyncEngine,
     AsyncSession,
     create_async_engine,
     async_sessionmaker,
 )
 
-from core.common.settings.config import Settings
-
 
 class Database:
-    def __init__(self, url):
+    def __init__(self, url: str) -> None:
         self.engine = create_async_engine(url=url)
         self.async_session = async_sessionmaker(
             bind=self.engine, expire_on_commit=False

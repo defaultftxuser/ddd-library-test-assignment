@@ -1,4 +1,4 @@
-from sqlalchemy import String, Enum, Integer, ForeignKey, Boolean
+from sqlalchemy import String, Enum, Integer, ForeignKey, Boolean, LargeBinary
 from sqlalchemy.orm import MappedColumn, mapped_column, relationship
 
 from enum import Enum as PyEnum

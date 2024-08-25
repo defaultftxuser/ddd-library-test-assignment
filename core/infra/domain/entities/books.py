@@ -12,5 +12,5 @@ class BookEntity(BaseEntity):
     theme: BookTheme
     authors: set["Author"] = field(default_factory=set)
 
-    def add_author(self, author: Author):
+    def add_author(self, author: Author) -> None:
         self.authors.add(author)

@@ -16,15 +16,17 @@ class Settings(BaseSettings):
     secret_jwt: str = Field(alias="SECRET_JWT")
     algorithm: str = Field(alias="JWT_ALGORITHM")
     hash_salt: bytes = Field(alias="HASH_SALT")
+    thirty_minutes: int = Field(alias="THIRTY_MINUTES")
+    one_month: int = Field(alias="ONE_MONTH")
     model_config = SettingsConfigDict(case_sensitive=True)
 
     @property
-    def get_db_url(self):
+    def get_db_url(self) -> str:
         return (
             f"{self.db_engine}://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
         )
 
 
-def get_settings():
+def get_settings() -> Settings:
     return Settings()
