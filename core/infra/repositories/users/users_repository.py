@@ -1,5 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass
+from typing import Type
 
 from core.infra.db.sql_db.models import User
 from core.infra.repositories.base_sql_repository import SQLAlchemyRepository
@@ -13,7 +14,7 @@ class BaseUserRepository(ABC):
 
 @dataclass(eq=False)
 class UserRepository(SQLAlchemyRepository, BaseUserRepository):
-    model: User
+    model: Type[User]
     database: Database
 
     async def deactivate_user(self, entity: dict[str, str]) -> None:

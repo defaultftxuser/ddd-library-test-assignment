@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import Type
+from typing import Type, Any
 
-from sqlalchemy import select, insert, update
+from sqlalchemy import select, insert, update, delete
+from sqlalchemy.exc import DatabaseError
 
 from core.infra.db.sql_db.base import SQLBaseModel
 from core.infra.repositories.database_config import Database
@@ -18,7 +19,7 @@ class SQLAlchemyRepository:
             result = await session.execute(query)
             return result.mappings().first()
 
-    async def add_object(self, **entity: str) -> dict:
+    async def add_object(self, **entity: Any) -> dict:
         async with self.database.create_async_session() as session:  # noqa
 
             query = (
@@ -40,3 +41,11 @@ class SQLAlchemyRepository:
             result = await session.execute(query)
             await session.commit()
             return result.mappings().first()
+
+    async def delete_object(self, **entity: str | int) -> None:
+        async with self.database.create_async_session() as session:  # noqa
+            try:
+                query = delete(self.model).filter_by(**entity)
+                await session.execute(query)
+            except DatabaseError as e:
+                raise e

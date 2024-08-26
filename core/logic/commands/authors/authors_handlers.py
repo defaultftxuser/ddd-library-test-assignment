@@ -1,0 +1,38 @@
+from dataclasses import dataclass
+
+from core.infra.repositories.authors.authors_repository import AuthorRepository
+from core.logic.commands.authors.authors_commands import (
+    AddAuthorCommand,
+    DeleteAuthorCommand,
+    GetAuthorsCommand,
+)
+from core.logic.commands.base import BaseHandler, CommandResult
+
+
+@dataclass(eq=False)
+class AddAuthorCommandHandler(BaseHandler):
+    repository: AuthorRepository
+
+    async def handle(self, command: AddAuthorCommand) -> dict[str, str | int]:
+        return await self.repository.create_author(
+            user_id=command.creator_id, entity=command.container
+        )
+
+
+@dataclass(eq=False)
+class GetAuthorsCommandHandler(BaseHandler):
+    repository: AuthorRepository
+
+    async def handle(self, command: GetAuthorsCommand) -> CommandResult:
+        result_entity = {key: value for key, value in command.__dict__.items() if value}
+        return await self.repository.get_authors(entity=result_entity)
+
+
+@dataclass(eq=False)
+class DeleteAuthorCommandHandler(BaseHandler):
+    repository: AuthorRepository
+
+    async def handle(self, command: DeleteAuthorCommand) -> None:
+        return await self.repository.delete_author(
+            command.creator_id, command.container
+        )

@@ -1,19 +1,21 @@
 from dataclasses import dataclass
 
+from core.logic.commands.base import BaseCommand
+
 
 @dataclass(eq=False)
-class CreateUserCommand:
+class CreateUserCommand(BaseCommand):
     username: str
     password: str
 
 
 @dataclass(eq=False)
-class CreateTokenUserCommand:
+class CreateTokenUserCommand(BaseCommand):
     username: str
     password: str
 
 
 @dataclass(eq=False)
-class DeactivateUserCommand:
+class DeactivateUserCommand(BaseCommand):
     username: str
     password: str
