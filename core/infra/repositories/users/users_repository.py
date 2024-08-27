@@ -19,8 +19,9 @@ class UserRepository(SQLAlchemyRepository, BaseUserRepository):
 
     async def deactivate_user(self, entity: dict[str, str]) -> None:
         if user_model := await self.get_one_or_none(**entity):
-            user_model["is_active"] = False
-        await self.update_object(user_model)
+            result_entity = dict(user_model)
+            result_entity["is_active"] = False
+            await self.update_object(result_entity)
 
     async def create_user(self, **entity) -> dict:
         async with self.database.create_async_session() as session:  # noqa

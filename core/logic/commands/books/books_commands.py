@@ -1,15 +1,24 @@
+from dataclasses import dataclass
+
 from core.logic.commands.base import BaseCommand
 
 
-class GetBookByName(BaseCommand):
+@dataclass(eq=False)
+class GetBookCommand(BaseCommand):
     book_name: str
 
 
-class GetBookByAuthor(BaseCommand):
-    author_first_name: str
-    author_second_name: str
-    author_last_name: str
-
-
-class GetAuthorById(BaseCommand):
+@dataclass(eq=False)
+class DeleteBookCommand(BaseCommand):
     author_id: int
+
+
+@dataclass(eq=False)
+class AddBookCommand(BaseCommand):
+    author_id: int
+
+
+@dataclass(eq=False)
+class LinkBookAuthorCommand(BaseCommand):
+    book_id: int
+    authors_id_list: list[int]

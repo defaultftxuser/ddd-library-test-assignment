@@ -31,7 +31,7 @@ class AuthorRepository(SQLAlchemyRepository, BaseAuthorRepository):
             entity["creator_id"] = user_id
             return await self.delete_object(**entity)
 
-    async def get_authors(self, entity: dict[str, str]):
+    async def get_authors(self, entity: dict[str, str]) -> list | None:
         async with self.database.create_async_session() as session:  # noqa
             query = select(
                 self.model.id,
@@ -42,6 +42,7 @@ class AuthorRepository(SQLAlchemyRepository, BaseAuthorRepository):
             result = await session.execute(query)
             if result:
                 return result.mappings().fetchall()
+        return []
 
     async def get_all_authors(self):
         async with self.database.create_async_session() as session:  # noqa

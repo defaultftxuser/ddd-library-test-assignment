@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 from core.infra.repositories.authors.authors_repository import AuthorRepository
 from core.logic.commands.authors.authors_commands import (
@@ -23,7 +24,7 @@ class AddAuthorCommandHandler(BaseHandler):
 class GetAuthorsCommandHandler(BaseHandler):
     repository: AuthorRepository
 
-    async def handle(self, command: GetAuthorsCommand) -> CommandResult:
+    async def handle(self, command: GetAuthorsCommand) -> list[Any] | None:
         result_entity = {key: value for key, value in command.__dict__.items() if value}
         return await self.repository.get_authors(entity=result_entity)
 

@@ -1,4 +1,4 @@
-from sqlalchemy import String, Enum, Integer, ForeignKey, Boolean, LargeBinary
+from sqlalchemy import String, Enum, Integer, ForeignKey, Boolean
 from sqlalchemy.orm import MappedColumn, mapped_column, relationship
 
 from enum import Enum as PyEnum
@@ -15,7 +15,9 @@ class Author(SQLBaseModel):
     second_name: MappedColumn[str] = mapped_column(String, nullable=False)
     last_name: MappedColumn[str] = mapped_column(String, nullable=False)
     sex: MappedColumn[PyEnum] = mapped_column(Enum(SexEnum), nullable=True)
-    creator_id: MappedColumn[int] = mapped_column(ForeignKey("users.id"))
+    creator_id: MappedColumn[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE")
+    )
 
     creator = relationship("User", back_populates="authors")
     books = relationship("Book", secondary="book_author", back_populates="authors")
@@ -28,7 +30,7 @@ class Book(SQLBaseModel):
     description: MappedColumn[str] = mapped_column(String, nullable=False)
     theme: MappedColumn[PyEnum] = mapped_column(Enum(ThemesEnums), nullable=False)
     creator_id: MappedColumn[int] = mapped_column(
-        ForeignKey("users.id"), primary_key=True
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
 
     authors = relationship("Author", secondary="book_author", back_populates="books")
@@ -38,10 +40,10 @@ class BookAuthor(Base):
     __tablename__ = "book_author"  # noqa
 
     book_id: MappedColumn[int] = mapped_column(
-        Integer, ForeignKey("books.id"), primary_key=True
+        Integer, ForeignKey("books.id", ondelete="CASCADE"), primary_key=True
     )
     author_id: MappedColumn[int] = mapped_column(
-        Integer, ForeignKey("authors.id"), primary_key=True
+        Integer, ForeignKey("authors.id", ondelete="CASCADE"), primary_key=True
     )
 
 

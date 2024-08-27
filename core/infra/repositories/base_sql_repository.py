@@ -19,6 +19,12 @@ class SQLAlchemyRepository:
             result = await session.execute(query)
             return result.mappings().first()
 
+    async def get_many(self, **filters: str) -> list[dict[str, str]]:
+        async with self.database.create_async_session() as session:  # noqa
+            query = select(self.model.__table__.c).filter_by(**filters)
+            result = await session.execute(query)
+            return result.mappings().fetchall()
+
     async def add_object(self, **entity: Any) -> dict:
         async with self.database.create_async_session() as session:  # noqa
 

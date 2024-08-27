@@ -6,7 +6,7 @@ from core.logic.commands.base import BaseCommand, BaseHandler, CommandResult
 
 
 @dataclass(eq=False)
-class Mediator:
+class Mediator:  # TODO: написать events, query и хэндлеры
     commands_map: dict[Type[BaseCommand], list[BaseHandler]] = field(
         default_factory=lambda: defaultdict(list)
     )

@@ -7,7 +7,7 @@ import jwt
 from core.common.settings.config import Settings
 
 
-@dataclass
+@dataclass(eq=False)
 class JWTService:
     config: Settings
     algorithm: str
@@ -21,7 +21,7 @@ class JWTService:
                 raise jwt.exceptions.ExpiredSignatureError("Token expired")
         except jwt.exceptions.PyJWTError:
             raise jwt.exceptions.PyJWTError("Wrong token")
-        return True
+        return result
 
     def create_access_token(self, payload: dict) -> str:
         access_token_payload = deepcopy(payload)

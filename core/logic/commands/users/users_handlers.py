@@ -7,7 +7,7 @@ from core.infra.domain.entities.users import UserHashedPasswordEntity
 from core.infra.repositories.users.users_repository import UserRepository
 from core.infra.services.hash_service import BcryptHashService
 from core.infra.services.jwt_service import JWTService
-from core.logic.commands.base import BaseHandler, CommandResult, Command
+from core.logic.commands.base import BaseHandler
 from core.logic.commands.users.users_commands import (
     CreateUserCommand,
     CreateTokenUserCommand,
@@ -19,18 +19,14 @@ from core.logic.commands.users.users_commands import (
 class CreateUserCommandHandler(BaseHandler):
     repository: UserRepository
     hash_service: BcryptHashService
-    auth_service: JWTService
 
-    async def handle(self, command: CreateUserCommand) -> tuple[str, str]:
+    async def handle(self, command: CreateUserCommand) -> None:
         try:
             user_entity = UserHashedPasswordEntity(
                 username=command.username,
                 hashed_password=self.hash_service.hash_data(command.password),
             )
-            result = await self.repository.create_user(**user_entity.__dict__)
-            access_token = self.auth_service.create_access_token(result.__dict__)
-            refresh_token = self.auth_service.create_access_token(result.__dict__)
-            return access_token, refresh_token
+            await self.repository.create_user(**user_entity.__dict__)
 
         except IntegrityError:
             raise UsernameExistsException(value=command.username)
@@ -42,7 +38,7 @@ class CreateTokenUserCommandHandler(BaseHandler):
     hash_service: BcryptHashService
     auth_service: JWTService
 
-    async def handle(self, command: CreateTokenUserCommand) -> dict[str, str]:
+    async def handle(self, command: CreateTokenUserCommand) -> dict[str, str] | str:
         hashed_password_entity = UserHashedPasswordEntity(
             username=command.username,
             hashed_password=self.hash_service.hash_data(command.password),
@@ -50,19 +46,28 @@ class CreateTokenUserCommandHandler(BaseHandler):
         user_entity = await self.repository.get_one_or_none(
             **hashed_password_entity.__dict__
         )
-        try:
-            if user_entity.get("is_active", False):
-                payload = {
-                    "id": user_entity.get("id"),
-                    "username": user_entity.get("username"),
-                }
-                access_token = self.auth_service.create_access_token(payload=payload)
-                refresh_token = self.auth_service.create_refresh_token(payload=payload)
-                return {"access_token": access_token, "refresh_token": refresh_token}
-        except TypeError as e:
-            raise e
+        if user_entity:
+            try:
+                if user_entity.get("is_active", False):
+                    payload = {
+                        "id": user_entity.get("id"),
+                        "username": user_entity.get("username"),
+                    }
+                    access_token = self.auth_service.create_access_token(
+                        payload=payload
+                    )
+                    refresh_token = self.auth_service.create_refresh_token(
+                        payload=payload
+                    )
+                    return {
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                    }
+            except TypeError as e:
+                raise e
 
-        raise Exception("User not active")
+            raise Exception("User not active")
+        return "User not found"  # noqa TODO: написать иключение UserNotFoundException и райзить его
 
 
 @dataclass(eq=False)
