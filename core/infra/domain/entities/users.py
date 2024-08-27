@@ -17,6 +17,10 @@ class UserHashedPasswordEntity:
 
 
 @dataclass
+class UserId:
+    id: int
+
+
+@dataclass
 class UserIdEntity:
     id: int
-    username: str

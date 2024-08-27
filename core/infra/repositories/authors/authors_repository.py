@@ -19,16 +19,12 @@ class AuthorRepository(SQLAlchemyRepository, BaseAuthorRepository):
     model: Type[Author]
     database: Database
 
-    async def create_author(
-        self, user_id: int, entity: dict[str, str | int]
-    ) -> dict[str, str | int]:
+    async def create_author(self, entity: dict[str, str | int]) -> dict[str, str | int]:
         async with self.database.create_async_session() as session:  # noqa
-            entity["creator_id"] = user_id
             return await self.add_object(**entity)
 
-    async def delete_author(self, user_id: int, entity: dict[str, str | int]) -> None:
+    async def delete_author(self, entity: dict[str, str | int]) -> None:
         async with self.database.create_async_session() as session:  # noqa
-            entity["creator_id"] = user_id
             return await self.delete_object(**entity)
 
     async def get_authors(self, entity: dict[str, str]) -> list | None:

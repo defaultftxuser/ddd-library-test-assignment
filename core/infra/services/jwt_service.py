@@ -1,6 +1,7 @@
 import time
 from copy import deepcopy
 from dataclasses import dataclass
+from typing import Any
 
 import jwt
 
@@ -12,7 +13,7 @@ class JWTService:
     config: Settings
     algorithm: str
 
-    def verify_token(self, token: str) -> bool:
+    def verify_token(self, token: str) -> dict[str, str | int]:
         try:
             result = jwt.decode(
                 jwt=token, key=self.config.secret_jwt, algorithms=self.algorithm

@@ -15,9 +15,7 @@ class AddAuthorCommandHandler(BaseHandler):
     repository: AuthorRepository
 
     async def handle(self, command: AddAuthorCommand) -> dict[str, str | int]:
-        return await self.repository.create_author(
-            user_id=command.creator_id, entity=command.container
-        )
+        return await self.repository.create_author(entity=command.__dict__)
 
 
 @dataclass(eq=False)
@@ -34,6 +32,4 @@ class DeleteAuthorCommandHandler(BaseHandler):
     repository: AuthorRepository
 
     async def handle(self, command: DeleteAuthorCommand) -> None:
-        return await self.repository.delete_author(
-            command.creator_id, command.container
-        )
+        return await self.repository.delete_author(entity=command.__dict__)

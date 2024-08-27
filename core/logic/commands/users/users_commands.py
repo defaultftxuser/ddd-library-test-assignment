@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 from core.logic.commands.base import BaseCommand
 
@@ -17,5 +18,4 @@ class CreateTokenUserCommand(BaseCommand):
 
 @dataclass(eq=False)
 class DeactivateUserCommand(BaseCommand):
-    username: str
-    password: str
+    user_id: int | Any

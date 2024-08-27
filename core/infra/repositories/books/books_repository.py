@@ -18,10 +18,7 @@ class BookRepository(SQLAlchemyRepository, BaseBookRepository):
     database: Database
 
     async def get_books(self, book_entity) -> list[dict[str, str]]:
-        final_entity = {
-            key: value for key, value in book_entity.__dict__.items() if value
-        }
-        return await self.get_many(**final_entity)
+        return await self.get_many(**book_entity)
 
     async def delete_book(self, book_entity):
         await self.delete_object(**book_entity)

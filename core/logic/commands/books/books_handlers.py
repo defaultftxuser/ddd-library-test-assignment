@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 from core.infra.repositories.books.books_repository import (
     BookRepository,
@@ -17,8 +18,9 @@ from core.logic.commands.books.books_commands import (
 class GetBookCommandHandler(BaseHandler):
     repository: BookRepository
 
-    async def handle(self, command: GetBookCommand) -> None:
-        await self.repository.get_books(book_entity=command.__dict__)
+    async def handle(self, command: GetBookCommand) -> list[Any]:
+        result_entity = {key: value for key, value in command.__dict__.items() if value}
+        return await self.repository.get_books(book_entity=result_entity)
 
 
 @dataclass(eq=False)

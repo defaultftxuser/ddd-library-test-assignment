@@ -3,7 +3,11 @@ from dataclasses import dataclass
 from sqlalchemy.exc import IntegrityError
 
 from core.common.exceptions.infra_exceptions import UsernameExistsException
-from core.infra.domain.entities.users import UserHashedPasswordEntity
+from core.infra.domain.entities.users import (
+    UserHashedPasswordEntity,
+    UserIdEntity,
+    UserId,
+)
 from core.infra.repositories.users.users_repository import UserRepository
 from core.infra.services.hash_service import BcryptHashService
 from core.infra.services.jwt_service import JWTService
@@ -76,8 +80,5 @@ class DeactivateUserCommandHandler(BaseHandler):
     hash_service: BcryptHashService
 
     async def handle(self, command: DeactivateUserCommand) -> None:
-        hashed_password_entity = UserHashedPasswordEntity(
-            username=command.username,
-            hashed_password=self.hash_service.hash_data(command.password),
-        )
+        hashed_password_entity = UserId(id=command.user_id)
         await self.repository.deactivate_user(hashed_password_entity.__dict__)

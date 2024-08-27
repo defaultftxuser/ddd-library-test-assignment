@@ -61,6 +61,11 @@ def init_container() -> Container:
     return _init_container()
 
 
+def resolve_auth():
+    container = init_container()
+    return container.resolve(JWTService)
+
+
 def resolve_mediator() -> Mediator:
     container = init_container()
     return container.resolve(Mediator)
@@ -108,15 +113,20 @@ def _init_container() -> Container:
     )
 
     container.register(
-        JWTService,
-        instance=JWTService(config=settings, algorithm=settings.algorithm),
-        scope=Scope.singleton,
-    )
-    container.register(
         BaseHashService,
         instance=BcryptHashService(salt=settings.hash_salt),
         scope=Scope.singleton,
     )
+
+    container.register(
+        JWTService,
+        instance=JWTService(config=settings, algorithm=settings.algorithm),
+        scope=Scope.singleton,
+    )
+
+    def init_auth_service():
+        auth_service = JWTService(config=settings, algorithm=settings.algorithm)
+        return auth_service
 
     def init_mediator():
         mediator = Mediator()
@@ -204,4 +214,5 @@ def _init_container() -> Container:
         return mediator
 
     container.register(Mediator, factory=init_mediator, scope=Scope.singleton)
+    container.register(JWTService, factory=init_auth_service, scope=Scope.singleton)
     return container
