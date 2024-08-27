@@ -12,10 +12,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - library_network
+      - backend
 
 networks:
-  library_network:
+  backend:
     driver: bridge
 
 volumes:
