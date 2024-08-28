@@ -4,9 +4,9 @@ from core.common.exceptions.base import AppException
 
 
 @dataclass(eq=False)
-class BaseDomainException(AppException):
+class UnexpectedTypeException(AppException, TypeError):
     value: str
 
     @property
     def message(self) -> str:
-        return "unknown domain exception"
+        return f"Wrong type {self.value}"

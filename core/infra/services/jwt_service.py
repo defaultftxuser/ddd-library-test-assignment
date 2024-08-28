@@ -1,11 +1,12 @@
 import time
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any
 
 import jwt
 
 from core.common.settings.config import Settings
+from core.exceptions.logic.auth import TokenExpiredException, WrongTokenException
+from core.exceptions.logic.base import BaseLogicException
 
 
 @dataclass(eq=False)
@@ -19,9 +20,9 @@ class JWTService:
                 jwt=token, key=self.config.secret_jwt, algorithms=self.algorithm
             )
             if result.get("exp_time") < time.time():
-                raise jwt.exceptions.ExpiredSignatureError("Token expired")
-        except jwt.exceptions.PyJWTError:
-            raise jwt.exceptions.PyJWTError("Wrong token")
+                raise WrongTokenException(value=token)
+        except BaseLogicException:
+            raise TokenExpiredException(value=token)
         return result
 
     def create_access_token(self, payload: dict) -> str:

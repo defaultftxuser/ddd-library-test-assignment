@@ -13,7 +13,7 @@ class UsernameValue(BaseValue):
 
     def validate(self) -> None:
         if len(self.value) < 5:
-            raise TooShortUsernameException(length=len(self.value))
+            raise TooShortUsernameException(value=self.value)
 
 
 @dataclass(eq=False)
@@ -22,4 +22,4 @@ class PasswordValue(BaseValue):
 
     def validate(self) -> None:
         if len(self.value) < 5:
-            raise TooShortPasswordException(length=len(self.value))
+            raise TooShortPasswordException(value=self.value)

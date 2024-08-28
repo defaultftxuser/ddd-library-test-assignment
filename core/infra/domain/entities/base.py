@@ -21,3 +21,7 @@ class BaseEntity(ABC):
         if not isinstance(other, BaseEntity):
             raise NotImplemented
         return self.oid == other.oid
+
+    @abstractmethod
+    def to_dict(self):
+        ...

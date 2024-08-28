@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from core.common.exceptions.common_exceptions import UnexpectedTypeException
+from core.common.exceptions.common import UnexpectedTypeException
 from core.exceptions.domain.books import (
     TooShortBookNameException,
     TooLongBookNameException,
@@ -17,9 +17,9 @@ class BookDescription(BaseValue):
 
     def validate(self) -> None:
         if len(self.value) < 5:
-            raise TooShortBookDescriptionException(length=5)
+            raise TooShortBookDescriptionException(value=self.value)
         if len(self.value) > 100:
-            raise TooLongBookDescriptionException(length=100)
+            raise TooLongBookDescriptionException(value=self.value)
 
 
 @dataclass
@@ -28,9 +28,9 @@ class BookName(BaseValue):
 
     def validate(self) -> None:
         if len(self.value) < 1:
-            raise TooShortBookNameException(length=1)
+            raise TooShortBookNameException(value=self.value)
         if len(self.value) > 50:
-            raise TooLongBookNameException(length=50)
+            raise TooLongBookNameException(value=self.value)
 
 
 @dataclass
@@ -39,4 +39,4 @@ class BookTheme(BaseValue):
 
     def validate(self) -> None:
         if not isinstance(self.value, ThemesEnums):
-            raise UnexpectedTypeException(value=self.value)
+            raise UnexpectedTypeException(value=str(self.value))

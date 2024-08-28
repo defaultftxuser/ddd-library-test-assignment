@@ -14,3 +14,11 @@ class BookEntity(BaseEntity):
 
     def add_author(self, author: Author) -> None:
         self.authors.add(author)
+
+    def to_dict(self):
+        return {
+            "description": self.description,
+            "name": self.name,
+            "theme": self.theme,
+            "authors": self.authors,
+        }

@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, TypeVar, Generic
 
-from core.common.exceptions.common_exceptions import UnexpectedTypeException
-
+from core.common.exceptions.common import UnexpectedTypeException
 
 Value = TypeVar("Value")
 

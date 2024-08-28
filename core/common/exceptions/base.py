@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from typing import Any
 
 
 @dataclass
-class CommonException(BaseException):
-    value: Any
+class AppException(BaseException):
+    value: str
 
     @property
     def message(self) -> str:

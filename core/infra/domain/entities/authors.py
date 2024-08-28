@@ -15,3 +15,11 @@ class Author(BaseEntity):
     second_name: AuthorSecondNameValue
     last_name: AuthorLastNameValue
     sex: SexEnum | None
+
+    def to_dict(self):
+        return {
+            "first_name": self.first_name,
+            "second_name": self.second_name,
+            "last_name": self.last_name,
+            "sex": self.sex,
+        }

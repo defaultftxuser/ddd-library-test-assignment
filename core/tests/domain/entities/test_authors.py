@@ -1,6 +1,5 @@
 import pytest
 
-from core.common.exceptions.common_exceptions import UnexpectedTypeException
 from core.infra.domain.entities.authors import Author
 from core.infra.domain.entities.enums import SexEnum
 from core.infra.domain.values.authors import (
@@ -41,7 +40,7 @@ def test_sex_value_validation_success():
 
 
 def test_sex_value_validation_failure():
-    with pytest.raises(UnexpectedTypeException):
+    with pytest.raises(TypeError):
         sex_value = SexValue("NotASexEnum")  # noqa
         sex_value.validate()
 

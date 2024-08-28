@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from core.common.exceptions.common_exceptions import UnexpectedTypeException
 from core.infra.domain.entities.enums import SexEnum
 from core.infra.domain.values.base import BaseValue
 
@@ -26,4 +25,4 @@ class SexValue(BaseValue):
 
     def validate(self) -> None:
         if not isinstance(self.value, SexEnum):
-            raise UnexpectedTypeException(value=self.value)
+            raise TypeError

@@ -2,10 +2,13 @@ from dataclasses import dataclass
 
 from sqlalchemy.exc import IntegrityError
 
-from core.common.exceptions.infra_exceptions import UsernameExistsException
+from core.exceptions.infra.handlers import (
+    UserNotFoundException,
+    UserNotActiveException,
+    UsernameExistsException,
+)
 from core.infra.domain.entities.users import (
     UserHashedPasswordEntity,
-    UserIdEntity,
     UserId,
 )
 from core.infra.repositories.users.users_repository import UserRepository
@@ -47,31 +50,24 @@ class CreateTokenUserCommandHandler(BaseHandler):
             username=command.username,
             hashed_password=self.hash_service.hash_data(command.password),
         )
-        user_entity = await self.repository.get_one_or_none(
+        user_entity: dict[str, str] = await self.repository.get_one_or_none(
             **hashed_password_entity.__dict__
         )
         if user_entity:
-            try:
-                if user_entity.get("is_active", False):
-                    payload = {
-                        "id": user_entity.get("id"),
-                        "username": user_entity.get("username"),
-                    }
-                    access_token = self.auth_service.create_access_token(
-                        payload=payload
-                    )
-                    refresh_token = self.auth_service.create_refresh_token(
-                        payload=payload
-                    )
-                    return {
-                        "access_token": access_token,
-                        "refresh_token": refresh_token,
-                    }
-            except TypeError as e:
-                raise e
+            if user_entity.get("is_active", False):
+                payload = {
+                    "id": user_entity.get("id"),
+                    "username": user_entity.get("username"),
+                }
+                access_token = self.auth_service.create_access_token(payload=payload)
+                refresh_token = self.auth_service.create_refresh_token(payload=payload)
+                return {
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                }
 
-            raise Exception("User not active")
-        return "User not found"  # noqa TODO: написать иключение UserNotFoundException и райзить его
+            raise UserNotActiveException(value=str(user_entity.get("username", "")))
+        raise UserNotFoundException(value="")
 
 
 @dataclass(eq=False)

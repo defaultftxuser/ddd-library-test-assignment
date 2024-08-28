@@ -9,6 +9,9 @@ class UserEntity(BaseEntity):
     username: UsernameValue
     password: PasswordValue
 
+    def to_dict(self):
+        return {"username": self.username.value, "password": self.password.value}
+
 
 @dataclass
 class UserHashedPasswordEntity:

@@ -7,7 +7,7 @@ from core.logic.commands.authors.authors_commands import (
     DeleteAuthorCommand,
     GetAuthorsCommand,
 )
-from core.logic.commands.base import BaseHandler, CommandResult
+from core.logic.commands.base import BaseHandler
 
 
 @dataclass(eq=False)
